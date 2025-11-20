@@ -1,11 +1,21 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import PublicHeader from '../components/PublicHeader.jsx'
+import '../assets/styles/Register.css'
 
 export default function Register() {
   const { register } = useAuth()
   const navigate = useNavigate()
-  const [form, setForm] = useState({ nombre: '', apellido: '', correo: '', password: '', rol: 'estudiante' })
+
+  // 🔹 Por defecto usuario normal
+  const [form, setForm] = useState({
+    nombre: '',
+    apellido: '',
+    correo: '',
+    password: '',
+  })
+
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [touched, setTouched] = useState(false)
@@ -17,15 +27,20 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setTouched(true)
+
     if (!form.nombre || !form.apellido || !form.correo || !form.password) {
       setError('Completa todos los campos obligatorios')
       return
     }
+
     setError('')
     setLoading(true)
+
     try {
-      const user = await register(form)
-      navigate(user.rol === 'administrador' ? '/admin/reservas' : '/estudiante/reservas', { replace: true })
+      // 🔹 Registrar como estudiante por defecto
+      const user = await register({ ...form, rol: 'estudiante' })
+
+      navigate('/estudiante/reservas', { replace: true })
     } catch (err) {
       setError(err.message || 'Error al registrar')
     } finally {
@@ -34,36 +49,85 @@ export default function Register() {
   }
 
   return (
-    <div className="auth-card">
-      <h2>Registro</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit} className="form">
-        <label>
-          Nombre
-          <input name="nombre" value={form.nombre} onChange={handleChange} required />
-        </label>
-        <label>
-          Apellido
-          <input name="apellido" value={form.apellido} onChange={handleChange} required />
-        </label>
-        <label>
-          Correo
-          <input name="correo" type="email" value={form.correo} onChange={handleChange} required />
-        </label>
-        <label>
-          Contraseña
-          <input name="password" type="password" value={form.password} onChange={handleChange} required />
-        </label>
-        <label>
-          Rol
-          <select name="rol" value={form.rol} onChange={handleChange}>
-            <option value="estudiante">Estudiante</option>
-            <option value="administrador">Administrador</option>
-          </select>
-        </label>
-        <button type="submit" className="btn" disabled={loading}>{loading ? 'Creando...' : 'Crear cuenta'}</button>
-      </form>
-      <p className="muted">¿Ya tienes cuenta? <Link to="/login">Inicia sesión</Link></p>
-    </div>
+    <>
+      <PublicHeader />
+
+      <div className="register-container">
+        <h2 className="welcome-title">¡Bienvenido a Aula Fácil!</h2>
+        <h3 className="register-subtitle">Registro</h3>
+
+        {error && <p className="error-text">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="register-form">
+
+          <label className="form-label">
+            Nombre
+            <input
+              name="nombre"
+              placeholder="example"
+              value={form.nombre}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label className="form-label">
+            Apellido
+            <input
+              name="apellido"
+              placeholder="example"
+              value={form.apellido}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label className="form-label">
+            Correo institucional
+            <input
+              name="correo"
+              type="email"
+              placeholder="example@campusucc.edu.co"
+              value={form.correo}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label className="form-label">
+            Contraseña
+            <input
+              name="password"
+              type="password"
+              placeholder="********"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label className="form-label">
+            Confirmar contraseña
+            <input
+              name="passwordConfirm"
+              type="password"
+              placeholder="********"
+              required
+            />
+          </label>
+
+          <button type="submit" className="btn-register" disabled={loading}>
+            {loading ? 'Creando...' : 'Registrarse'}
+          </button>
+        </form>
+
+        <p className="register-text">
+          ¿Ya tienes una cuenta?{' '}
+          <Link to="/login" className="register-link">
+            Iniciar sesión
+          </Link>
+        </p>
+      </div>
+    </>
   )
 }

@@ -1,16 +1,37 @@
 import { useRoutes } from 'react-router-dom'
 import './App.css'
+
+// Layout general que incluye tu PublicHeader
 import { Layout } from './components/Layout.jsx'
+
+// Rutas protegidas
 import { ProtectedRoute } from './components/ProtectedRoute.jsx'
+
+// Páginas públicas
 import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import Home from './pages/Home.jsx'
+
+// Páginas estudiante
 import StudentReservations from './pages/StudentReservations.jsx'
+
+// Páginas admin
 import AdminReservations from './pages/AdminReservations.jsx'
 import AdminAulas from './pages/AdminAulas.jsx'
 import AdminReportes from './pages/AdminReportes.jsx'
 
 const routes = [
+  // 🔹 RUTAS PÚBLICAS SIN LAYOUT
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/registro',
+    element: <Register />,
+  },
+
+  // 🔹 HOME PÚBLICO CON LAYOUT (tiene el header)
   {
     path: '/',
     element: (
@@ -19,22 +40,8 @@ const routes = [
       </Layout>
     ),
   },
-  {
-    path: '/login',
-    element: (
-      <Layout>
-        <Login />
-      </Layout>
-    ),
-  },
-  {
-    path: '/registro',
-    element: (
-      <Layout>
-        <Register />
-      </Layout>
-    ),
-  },
+
+  // 🔹 RUTAS DEL ESTUDIANTE (PROTEGIDAS + LAYOUT)
   {
     element: (
       <Layout>
@@ -45,6 +52,8 @@ const routes = [
       { path: '/estudiante/reservas', element: <StudentReservations /> },
     ],
   },
+
+  // 🔹 RUTAS DE ADMIN (PROTEGIDAS + LAYOUT)
   {
     element: (
       <Layout>
@@ -60,8 +69,7 @@ const routes = [
 ]
 
 function App() {
-  const element = useRoutes(routes)
-  return element
+  return useRoutes(routes)
 }
 
 export default App

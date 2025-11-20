@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext.jsx'
+import '../assets/styles/Login.css'
+import PublicHeader from '../components/PublicHeader.jsx'
 
 export default function Login() {
   const { login } = useAuth()
@@ -8,7 +10,6 @@ export default function Login() {
   const [form, setForm] = useState({ correo: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [touched, setTouched] = useState(false)
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value })
@@ -16,16 +17,23 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setTouched(true)
+
     if (!form.correo || !form.password) {
       setError('Completa correo y contraseña')
       return
     }
+
     setError('')
     setLoading(true)
+
     try {
       const user = await login(form)
-      navigate(user.rol === 'administrador' ? '/admin/reservas' : '/estudiante/reservas', { replace: true })
+      navigate(
+        user.rol === 'administrador'
+          ? '/admin/reservas'
+          : '/estudiante/reservas',
+        { replace: true }
+      )
     } catch (err) {
       setError(err.message || 'Error al iniciar sesión')
     } finally {
@@ -34,21 +42,50 @@ export default function Login() {
   }
 
   return (
-    <div className="auth-card">
-      <h2>Iniciar sesión</h2>
-      {error && <p className="error">{error}</p>}
-      <form onSubmit={handleSubmit} className="form">
-        <label>
-          Correo
-          <input name="correo" type="email" value={form.correo} onChange={handleChange} onBlur={() => setTouched(true)} required />
-        </label>
-        <label>
-          Contraseña
-          <input name="password" type="password" value={form.password} onChange={handleChange} onBlur={() => setTouched(true)} required />
-        </label>
-        <button type="submit" className="btn" disabled={loading}>{loading ? 'Ingresando...' : 'Entrar'}</button>
-      </form>
-      <p className="muted">¿No tienes cuenta? <Link to="/registro">Regístrate</Link></p>
+    <div className="login-container">
+      <PublicHeader />
+
+      <main className="login-content">
+        <h2 className="welcome-title">¡Bienvenido a Aula Fácil!</h2>
+        <h3 className="login-subtitle">Ingreso</h3>
+
+        {error && <p className="error-text">{error}</p>}
+
+        <form onSubmit={handleSubmit} className="login-form">
+          <label className="form-label">
+            Correo institucional
+            <input
+              name="correo"
+              type="email"
+              placeholder="example@campusucc.edu.co"
+              value={form.correo}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <label className="form-label">
+            Contraseña
+            <input
+              name="password"
+              type="password"
+              placeholder="********"
+              value={form.password}
+              onChange={handleChange}
+              required
+            />
+          </label>
+
+          <button type="submit" className="btn-login" disabled={loading}>
+            {loading ? 'Ingresando...' : 'Iniciar sesión'}
+          </button>
+        </form>
+
+        <p className="register-text">
+          ¿No tienes una cuenta?{' '}
+          <Link to="/registro" className="register-link">Regístrate aquí</Link>
+        </p>
+      </main>
     </div>
   )
 }

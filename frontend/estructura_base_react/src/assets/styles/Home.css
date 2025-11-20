@@ -1,0 +1,55 @@
+/* CONTENEDOR PRINCIPAL */
+.home-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 80px auto;
+  text-align: center;
+  padding: 20px;
+}
+
+/* TITULO PRINCIPAL */
+.home-title {
+  font-size: 36px;
+  font-weight: 700;
+  color: #007a4a;
+  margin-bottom: 15px;
+}
+
+/* SUBTITULO */
+.home-subtitle {
+  font-size: 18px;
+  color: #333;
+  max-width: 600px;
+  margin: 0 auto 35px auto;
+  line-height: 1.5;
+}
+
+/* BOTONES */
+.home-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 25px;
+}
+
+.home-btn {
+  padding: 12px 24px;
+  background-color: #008043;
+  color: white;
+  font-size: 16px;
+  border: none;
+  border-radius: 22px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.home-btn:hover {
+  opacity: 0.9;
+}
+
+.home-btn.secondary {
+  background-color: transparent;
+  color: #008043;
+  border: 2px solid #008043;
+}
