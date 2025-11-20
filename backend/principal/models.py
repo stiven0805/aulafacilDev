@@ -45,6 +45,14 @@ class Usuario(models.Model):
     created_at = models.DateTimeField(blank=True, null=True)
     updated_at = models.DateTimeField(blank=True, null=True)
 
+    @property
+    def is_authenticated(self):
+        return True
+
+    @property
+    def is_staff(self):
+        return self.rol == 'administrador'
+
     class Meta:
         managed = False
         db_table = 'usuario'

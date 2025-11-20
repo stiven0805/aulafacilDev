@@ -1,0 +1,29 @@
+# Environment files
+.env
+*.env
+.env.*
+backend/.env
+frontend/estructura_base_react/.env
+
+# Python artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.so
+*.sqlite3
+*.db
+
+# Virtual environments
+.venv/
+venv/
+backend/.venv/
+
+# Node.js artifacts
+node_modules/
+dist/
+dist-ssr/
+
+# Misc
+*.log
+.DS_Store
