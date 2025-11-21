@@ -70,7 +70,7 @@ class AulaViewSet(viewsets.ModelViewSet):
             if inicio and fin:
                 ocupadas = Reserva.objects.filter(
                     id_aula__in=queryset,
-                    estado__iexact="pendiente",
+                    estado__in=["pendiente", "confirmada"],
                     inicio__lt=fin,
                     fin__gt=inicio,
                 ).values_list("id_aula_id", flat=True)
