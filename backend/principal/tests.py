@@ -1,8 +1,7 @@
 from datetime import timedelta
 
 from django.contrib.auth.hashers import make_password
-from django.db import connection
-from django.test import TestCase, override_settings
+from django.test import TestCase
 from django.utils import timezone
 from rest_framework.test import APIClient
 
@@ -10,20 +9,9 @@ from .auth import generar_token_usuario
 from .models import Aula, Reserva, Usuario
 
 
-@override_settings(
-    DATABASES={
-        "default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"},
-    }
-)
 class ReservaBusinessTests(TestCase):
     @classmethod
     def setUpTestData(cls):
-        # Habilitar creación de tablas para modelos unmanaged en el entorno de prueba.
-        for model in [Usuario, Aula, Reserva]:
-            model._meta.managed = True
-            with connection.schema_editor() as schema_editor:
-                schema_editor.create_model(model)
-
         cls.estudiante = Usuario.objects.create(
             nombre="Ana",
             apellido="Estudiante",
@@ -39,16 +27,6 @@ class ReservaBusinessTests(TestCase):
             rol="administrador",
         )
         cls.aula = Aula.objects.create(nombre_aula="A101", capacidad=10, descripcion="Sala 1")
-
-    @classmethod
-    def tearDownClass(cls):
-        # Limpia tablas creadas manualmente.
-        with connection.schema_editor() as schema_editor:
-            for model in [Reserva, Aula, Usuario]:
-                schema_editor.delete_model(model)
-        for model in [Usuario, Aula, Reserva]:
-            model._meta.managed = False
-        super().tearDownClass()
 
     def _auth(self, usuario):
         client = APIClient()

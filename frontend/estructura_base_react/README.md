@@ -28,3 +28,14 @@ npm run dev
 - Registro/Login → obtiene token y usuario actual (se guarda en localStorage).
 - Panel estudiante → busca aulas disponibles, crea/edita/cancela sus reservas.
 - Panel admin → gestiona reservas, aulas/recursos y consulta estadísticas/notificaciones.
+
+## Pasos para probar de extremo a extremo
+1. Backend: sigue `backend/README.md` (instalar, `makemigrations`, `migrate`, `runserver`).
+2. Frontend:
+   ```bash
+   cd frontend/estructura_base_react
+   npm install
+   npm run dev
+   ```
+   Si el backend no está en localhost:8000, define `VITE_API_BASE_URL` en `.env`.
+3. Ejecuta los casos descritos en `tests_manual_e2e.md` para validar login, reservas, aulas, reportes y notificaciones.

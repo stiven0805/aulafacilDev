@@ -4,4 +4,4 @@ from django.shortcuts import render
 from django.http import HttpResponse
 
 def inicio(request):
-    return HttpResponse("<h1>¡Hola! ¡Tu proyecto Django con PostgreSQL está funcionando!</h1>")
+    return HttpResponse("<h1>¡Hola! ¡Tu proyecto Django con SQLite está funcionando!</h1>")

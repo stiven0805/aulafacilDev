@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+const API_BASE = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000').replace(/\/+$/, '')
 
 const TOKEN_KEY = 'aulaFacilToken'
 
@@ -6,27 +6,41 @@ function getToken() {
   return localStorage.getItem(TOKEN_KEY)
 }
 
-async function request(method, url, data, options = {}) {
+function buildUrl(path) {
+  return `${API_BASE}${path.startsWith('/') ? '' : '/'}${path}`
+}
+
+async function request(method, urlPath, data, options = {}) {
   const headers = options.headers ? { ...options.headers } : {}
   const token = getToken()
   if (token) headers.Authorization = `Token ${token}`
   if (!(data instanceof FormData)) headers['Content-Type'] = 'application/json'
 
-  const resp = await fetch(`${API_BASE}${url}`, {
-    method,
-    headers,
-    body: data ? (data instanceof FormData ? data : JSON.stringify(data)) : undefined,
-  })
+  const url = buildUrl(urlPath)
+  let resp
+  try {
+    resp = await fetch(url, {
+      method,
+      headers,
+      body: data ? (data instanceof FormData ? data : JSON.stringify(data)) : undefined,
+    })
+  } catch (networkError) {
+    const error = new Error(`No se pudo conectar con el backend (${url}). Verifica que esté activo.`)
+    error.isNetwork = true
+    error.cause = networkError
+    throw error
+  }
 
   const contentType = resp.headers.get('content-type') || ''
   const isJson = contentType.includes('application/json')
   const payload = isJson ? await resp.json().catch(() => ({})) : {}
 
   if (!resp.ok) {
-    const detail = payload.detail || payload.non_field_errors?.join(' ') || 'Error inesperado'
+    const detail = payload.detail || payload.non_field_errors?.join(' ') || `Error ${resp.status} en ${url}`
     const error = new Error(detail)
     error.status = resp.status
     error.payload = payload
+    error.url = url
     throw error
   }
   return payload

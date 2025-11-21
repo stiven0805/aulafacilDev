@@ -8,7 +8,6 @@ class Aula(models.Model):
     descripcion = models.TextField(blank=True, null=True)
 
     class Meta:
-        managed = False
         db_table = 'aula'
         
 class Recurso(models.Model):
@@ -19,7 +18,6 @@ class Recurso(models.Model):
     id_aula = models.ForeignKey(Aula, models.DO_NOTHING, db_column='id_aula')
 
     class Meta:
-        managed = False
         db_table = 'recurso'
 
 
@@ -32,7 +30,6 @@ class Reserva(models.Model):
     id_aula = models.ForeignKey(Aula, models.DO_NOTHING, db_column='id_aula')
 
     class Meta:
-        managed = False
         db_table = 'reserva'
 
 class Usuario(models.Model):
@@ -54,5 +51,4 @@ class Usuario(models.Model):
         return self.rol == 'administrador'
 
     class Meta:
-        managed = False
         db_table = 'usuario'

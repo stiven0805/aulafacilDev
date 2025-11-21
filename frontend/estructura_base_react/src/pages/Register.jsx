@@ -42,7 +42,12 @@ export default function Register() {
 
       navigate('/estudiante/reservas', { replace: true })
     } catch (err) {
-      setError(err.message || 'Error al registrar')
+      console.error('Error en registro', err)
+      if (err?.isNetwork || err?.message?.toLowerCase().includes('conectar')) {
+        setError('No se pudo conectar con el servidor. Verifica que el backend esté activo en http://localhost:8000.')
+      } else {
+        setError(err.message || 'Error al registrar')
+      }
     } finally {
       setLoading(false)
     }
