@@ -1,6 +1,6 @@
 import os
 import django
-
+#crear aulas
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'aulafacil.settings')
 django.setup()
 
